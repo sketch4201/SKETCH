@@ -1,0 +1,167 @@
+{
+  "name": "iease-music",
+  "version": "1.3.4",
+  "description": "网易云音乐第三方 ✨",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "node node_modules/.bin/eslint .",
+    "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config ./config/webpack.config.electron.js --progress --profile --colors",
+    "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config ./config/webpack.config.production.js --progress --profile --colors",
+    "build": "rm -rf dist && npm run build-main && npm run build-renderer",
+    "api": "cross-env NODE_ENV=development APIONLY=1 DEBUG_COLORS=true DEBUG=dev:*,-not_this node -r babel-register server/api.js",
+    "hot-server": "cross-env NODE_ENV=development DEBUG_COLORS=true DEBUG=dev:*,-not_this node -r babel-register server/dev.js",
+    "start-hot": "cross-env HOT=1 NODE_ENV=development DEBUG_COLORS=true DEBUG=dev:*,-not_this ./node_modules/.bin/electron -r babel-register -r babel-polyfill ./main",
+    "package-mac": "npm run build && rm -rf release && build --mac --projectDir ./dist",
+    "package-linux": "npm run build && rm -rf release && build --linux --projectDir ./dist",
+    "package-win": "npm run build && rm -rf release && build --win --ia32 --projectDir ./dist",
+    "dev": "concurrently --kill-others \"npm run hot-server\" \"npm run start-hot\"",
+    "dd": "electron-builder --win --ia32 --projectDir ./dist",
+    "publish": "sh ./bin/publish.sh"
+  },
+  "author": {
+    "name": "trazyn",
+    "email": "var.darling@gmail.com",
+    "url": "https://twitter.com/var_darling"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trazyn/ieaseMusic.git"
+  },
+  "build": {
+    "productName": "ieaseMusic",
+    "appId": "gh.trazyn.ieaseMusic",
+    "compression": "maximum",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "title": "ieaseMusic ${version}"
+    },
+    "mac": {
+      "icon": "../resource/dock.icns"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "AppImage"
+      ],
+      "icon": "../resource",
+      "category": "Music",
+      "executableName": "ieaseMusic"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "../resource/ieaseMusic.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    },
+    "directories": {
+      "output": "../release"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "trazyn",
+        "repo": "ieaseMusic"
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/mkdirp": "^0.5.2",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-add-module-exports": "^1.0.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-react-optimize": "^1.0.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "concurrently": "^4.1.0",
+    "copy-webpack-plugin": "^4.6.0",
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.0",
+    "electron": "^4.0.1",
+    "electron-builder": "^20.31.2",
+    "eslint": "^5.12.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-config-standard-react": "^7.0.2",
+    "eslint-formatter-pretty": "^2.1.0",
+    "eslint-loader": "^2.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.12.3",
+    "eslint-plugin-standard": "^4.0.0",
+    "express": "^4.15.4",
+    "html-loader": "^0.5.1",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.23.0",
+    "svg-inline-loader": "^0.8.0",
+    "terser-webpack-plugin": "^1.2.1",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-middleware": "^3.5.0",
+    "webpack-hot-middleware": "^2.22.3",
+    "webpack-sources": "^1.1.0"
+  },
+  "dependencies": {
+    "apicache": "^1.2.3",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "classname": "0.0.0",
+    "cookie-parser": "^1.4.3",
+    "cron": "^1.6.0",
+    "crypto": "^1.0.1",
+    "debug": "^4.1.1",
+    "delegate": "^3.2.0",
+    "electron-json-storage": "^4.1.6",
+    "electron-updater": "^4.0.6",
+    "electron-window-state": "^5.0.3",
+    "han": "0.0.7",
+    "ionicons201": "^1.0.0",
+    "libphonenumber-js": "^1.7.8",
+    "md5": "^2.2.1",
+    "mkdirp": "^0.5.1",
+    "mobx": "^5.8.0",
+    "mobx-react": "^5.4.3",
+    "moment": "^2.23.0",
+    "node-id3": "^0.1.7",
+    "pac-proxy-agent": "^3.0.0",
+    "perdido": "^2.0.1",
+    "prop-types": "^15.6.2",
+    "qrcode-js": "0.0.2",
+    "react": "^16.7.0",
+    "react-addons-css-transition-group": "^15.6.2",
+    "react-dom": "^16.7.0",
+    "react-hot-loader": "^4.6.3",
+    "react-jss": "^8.6.1",
+    "react-router-dom": "^4.3.1",
+    "request": "^2.88.0",
+    "request-progress": "^3.0.0",
+    "request-promise-native": "^1.0.5",
+    "set-cookie-parser": "^2.2.1",
+    "simple-lastfm": "^1.0.5",
+    "tmp-promise": "^1.0.5"
+  }
+}
